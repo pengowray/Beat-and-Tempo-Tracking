@@ -502,7 +502,11 @@ double     adaptive_threshold_update(AdaptiveThreshold* self, double     x)
 /*--------------------------------------------------------------------*/
 double     statistics_random_flat()
 {
+#ifdef _WIN32
+  return rand() / (double)RAND_MAX;
+#else
   return random() / (double)RAND_MAX;
+#endif
 }
 
 /*--------------------------------------------------------------------*/
