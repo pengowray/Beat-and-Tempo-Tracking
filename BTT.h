@@ -33,13 +33,8 @@ extern "C"{
 #endif   //(__cplusplus)
 
 #include "src/DFT.h"
+#include "src/DLL.h"
 
-/*--------------------------------------------------------------------*/
-#ifdef BUILD_DLL
-#define DLL_EXPORT __declspec(dllexport)
-#else
-#define DLL_EXPORT
-#endif
 /*--------------------------------------------------------------------*/
 typedef enum
 {
@@ -103,85 +98,86 @@ typedef void (*btt_beat_callback_t)              (void* SELF, unsigned long long
   the analysis latency is caused by complex interactions between filters, buffering, adaptive thresholds, and other things, and I couldn't
   find a closed-form expression that caputures it. If you use btt_new_default you will be fine, if not, you have to manually calculate it.
  */
-BTT*      btt_new                                (int spectral_flux_stft_len, int spectral_flux_stft_overlap,
-                                                  int oss_filter_order      , int oss_length,
-                                                  int cbss_length           , int onset_threshold_len, double sample_rate,
-                                                  int analysis_latency_onset_adjustment, int analysis_latency_beat_adjustment);
-BTT*      btt_new_default                        ();
-BTT*      btt_destroy                            (BTT* self);
-void      btt_process                            (BTT* self, dft_sample_t* input, int num_samples);
-double    btt_get_sample_rate                    (BTT* self);
-void      btt_init                               (BTT* self);
-void      btt_clear                              (BTT* self);
-void      btt_init_tempo                         (BTT* self, double bpm /*0 to clear tempo*/);
 
-int       btt_get_beat_period_audio_samples      (BTT* self);
-double    btt_get_tempo_bpm                      (BTT* self);
-double    btt_get_tempo_certainty                (BTT* self);
-void      btt_set_count_in_n                     (BTT* self, int n);
-int       btt_get_count_in_n                     (BTT* self);
+DLL_EXPORT  BTT*      btt_new                                (int spectral_flux_stft_len, int spectral_flux_stft_overlap,
+                                                              int oss_filter_order      , int oss_length,
+                                                              int cbss_length           , int onset_threshold_len, double sample_rate,
+                                                              int analysis_latency_onset_adjustment, int analysis_latency_beat_adjustment);
+DLL_EXPORT  BTT*      btt_new_default                        ();
+DLL_EXPORT  BTT*      btt_destroy                            (BTT* self);
+DLL_EXPORT  void      btt_process                            (BTT* self, dft_sample_t* input, int num_samples);
+DLL_EXPORT  double    btt_get_sample_rate                    (BTT* self);
+DLL_EXPORT  void      btt_init                               (BTT* self);
+DLL_EXPORT  void      btt_clear                              (BTT* self);
+DLL_EXPORT  void      btt_init_tempo                         (BTT* self, double bpm /*0 to clear tempo*/);
+
+DLL_EXPORT  int       btt_get_beat_period_audio_samples      (BTT* self);
+DLL_EXPORT  double    btt_get_tempo_bpm                      (BTT* self);
+DLL_EXPORT  double    btt_get_tempo_certainty                (BTT* self);
+DLL_EXPORT  void      btt_set_count_in_n                     (BTT* self, int n);
+DLL_EXPORT  int       btt_get_count_in_n                     (BTT* self);
 
 /* only valid in metronome mode */
-void      btt_set_metronome_bpm                  (BTT* self, double bpm);
+DLL_EXPORT  void      btt_set_metronome_bpm                  (BTT* self, double bpm);
 
 /* onset detection adjustments */
-void      btt_set_use_amplitude_normalization    (BTT* self, int use);
-int       btt_get_use_amplitude_normalization    (BTT* self);
-void      btt_set_spectral_compression_gamma     (BTT* self, double gamma);
-double    btt_get_spectral_compression_gamma     (BTT* self);
-void      btt_set_oss_filter_cutoff              (BTT* self, double Hz);
-double    btt_get_oss_filter_cutoff              (BTT* self);
-void      btt_set_onset_threshold                (BTT* self, double num_std_devs);
-double    btt_get_onset_threshold                (BTT* self);
-void      btt_set_onset_threshold_min            (BTT* self, double value);
-double    btt_get_onset_threshold_min            (BTT* self);
-void      btt_set_noise_cancellation_threshold   (BTT* self, double dB /*negative*/);
-double    btt_get_noise_cancellation_threshold   (BTT* self);
+DLL_EXPORT  void      btt_set_use_amplitude_normalization    (BTT* self, int use);
+DLL_EXPORT  int       btt_get_use_amplitude_normalization    (BTT* self);
+DLL_EXPORT  void      btt_set_spectral_compression_gamma     (BTT* self, double gamma);
+DLL_EXPORT  double    btt_get_spectral_compression_gamma     (BTT* self);
+DLL_EXPORT  void      btt_set_oss_filter_cutoff              (BTT* self, double Hz);
+DLL_EXPORT  double    btt_get_oss_filter_cutoff              (BTT* self);
+DLL_EXPORT  void      btt_set_onset_threshold                (BTT* self, double num_std_devs);
+DLL_EXPORT  double    btt_get_onset_threshold                (BTT* self);
+DLL_EXPORT  void      btt_set_onset_threshold_min            (BTT* self, double value);
+DLL_EXPORT  double    btt_get_onset_threshold_min            (BTT* self);
+DLL_EXPORT  void      btt_set_noise_cancellation_threshold   (BTT* self, double dB /*negative*/);
+DLL_EXPORT  double    btt_get_noise_cancellation_threshold   (BTT* self);
 
 /* tempo tracking adjustments */
-void      btt_set_autocorrelation_exponent       (BTT* self, double exponent);
-double    btt_get_autocorrelation_exponent       (BTT* self);
-void      btt_set_min_tempo                      (BTT* self, double min_tempo);
-double    btt_get_min_tempo                      (BTT* self);
-void      btt_set_max_tempo                      (BTT* self, double max_tempo);
-double    btt_get_max_tempo                      (BTT* self);
-void      btt_set_num_tempo_candidates           (BTT* self, int num_candidates);
-int       btt_get_num_tempo_candidates           (BTT* self);
-void      btt_set_gaussian_tempo_histogram_decay (BTT* self, double coefficient);
-double    btt_get_gaussian_tempo_histogram_decay (BTT* self);
-void      btt_set_gaussian_tempo_histogram_width (BTT* self, double width);
-double    btt_get_gaussian_tempo_histogram_width (BTT* self);
-void      btt_set_log_gaussian_tempo_weight_mean (BTT* self, double bpm);
-double    btt_get_log_gaussian_tempo_weight_mean (BTT* self);
-void      btt_set_log_gaussian_tempo_weight_width(BTT* self, double bpm);
-double    btt_get_log_gaussian_tempo_weight_width(BTT* self);
+DLL_EXPORT  void      btt_set_autocorrelation_exponent       (BTT* self, double exponent);
+DLL_EXPORT  double    btt_get_autocorrelation_exponent       (BTT* self);
+DLL_EXPORT  void      btt_set_min_tempo                      (BTT* self, double min_tempo);
+DLL_EXPORT  double    btt_get_min_tempo                      (BTT* self);
+DLL_EXPORT  void      btt_set_max_tempo                      (BTT* self, double max_tempo);
+DLL_EXPORT  double    btt_get_max_tempo                      (BTT* self);
+DLL_EXPORT  void      btt_set_num_tempo_candidates           (BTT* self, int num_candidates);
+DLL_EXPORT  int       btt_get_num_tempo_candidates           (BTT* self);
+DLL_EXPORT  void      btt_set_gaussian_tempo_histogram_decay (BTT* self, double coefficient);
+DLL_EXPORT  double    btt_get_gaussian_tempo_histogram_decay (BTT* self);
+DLL_EXPORT  void      btt_set_gaussian_tempo_histogram_width (BTT* self, double width);
+DLL_EXPORT  double    btt_get_gaussian_tempo_histogram_width (BTT* self);
+DLL_EXPORT  void      btt_set_log_gaussian_tempo_weight_mean (BTT* self, double bpm);
+DLL_EXPORT  double    btt_get_log_gaussian_tempo_weight_mean (BTT* self);
+DLL_EXPORT  void      btt_set_log_gaussian_tempo_weight_width(BTT* self, double bpm);
+DLL_EXPORT  double    btt_get_log_gaussian_tempo_weight_width(BTT* self);
 
 /* beat tracking adjustments */
-void      btt_set_cbss_alpha                     (BTT* self, double alpha);
-double    btt_get_cbss_alpha                     (BTT* self);
-void      btt_set_cbss_eta                       (BTT* self, double eta);
-double    btt_get_cbss_eta                       (BTT* self);
-void      btt_set_beat_prediction_adjustment     (BTT* self, int oss_samples_earlier);
-int       btt_get_beat_prediction_adjustment     (BTT* self);
-int       btt_get_beat_prediction_adjustment_audio_samples (BTT* self);
-void      btt_set_predicted_beat_trigger_index   (BTT* self, int index);
-int       btt_get_predicted_beat_trigger_index   (BTT* self);
-void      btt_set_predicted_beat_gaussian_width  (BTT* self, double width);
-double    btt_get_predicted_beat_gaussian_width  (BTT* self);
-void      btt_set_ignore_spurious_beats_duration (BTT* self, double percent_of_tempo);
-double    btt_get_ignore_spurious_beats_duration (BTT* self);
-void      btt_set_analysis_latency_onset_adjustment(BTT* self, int adjustment);
-int       btt_get_analysis_latency_onset_adjustment(BTT* self);
-void      btt_set_analysis_latency_beat_adjustment(BTT* self, int adjustment);
-int       btt_get_analysis_latency_beat_adjustment(BTT* self);
-
-void                 btt_set_tracking_mode            (BTT* self, btt_tracking_mode_t mode);
-btt_tracking_mode_t  btt_get_tracking_mode            (BTT* self);
-const char*          btt_get_tracking_mode_string     (BTT* self);
-void                 btt_set_onset_tracking_callback  (BTT* self, btt_onset_callback_t callback, void* callback_self);
-btt_onset_callback_t btt_get_onset_tracking_callback  (BTT* self, void** returned_callback_self);
-void                 btt_set_beat_tracking_callback   (BTT* self, btt_beat_callback_t callback, void* callback_self);
-btt_beat_callback_t  btt_get_beat_tracking_callback   (BTT* self, void** returned_callback_self);
+DLL_EXPORT  void      btt_set_cbss_alpha                     (BTT* self, double alpha);
+DLL_EXPORT  double    btt_get_cbss_alpha                     (BTT* self);
+DLL_EXPORT  void      btt_set_cbss_eta                       (BTT* self, double eta);
+DLL_EXPORT  double    btt_get_cbss_eta                       (BTT* self);
+DLL_EXPORT  void      btt_set_beat_prediction_adjustment     (BTT* self, int oss_samples_earlier);
+DLL_EXPORT  int       btt_get_beat_prediction_adjustment     (BTT* self);
+DLL_EXPORT  int       btt_get_beat_prediction_adjustment_audio_samples (BTT* self);
+DLL_EXPORT  void      btt_set_predicted_beat_trigger_index   (BTT* self, int index);
+DLL_EXPORT  int       btt_get_predicted_beat_trigger_index   (BTT* self);
+DLL_EXPORT  void      btt_set_predicted_beat_gaussian_width  (BTT* self, double width);
+DLL_EXPORT  double    btt_get_predicted_beat_gaussian_width  (BTT* self);
+DLL_EXPORT  void      btt_set_ignore_spurious_beats_duration (BTT* self, double percent_of_tempo);
+DLL_EXPORT  double    btt_get_ignore_spurious_beats_duration (BTT* self);
+DLL_EXPORT  void      btt_set_analysis_latency_onset_adjustment(BTT* self, int adjustment);
+DLL_EXPORT  int       btt_get_analysis_latency_onset_adjustment(BTT* self);
+DLL_EXPORT  void      btt_set_analysis_latency_beat_adjustment(BTT* self, int adjustment);
+DLL_EXPORT  int       btt_get_analysis_latency_beat_adjustment(BTT* self);
+  
+DLL_EXPORT  void                 btt_set_tracking_mode            (BTT* self, btt_tracking_mode_t mode);
+DLL_EXPORT  btt_tracking_mode_t  btt_get_tracking_mode            (BTT* self);
+DLL_EXPORT  const char*          btt_get_tracking_mode_string     (BTT* self);
+DLL_EXPORT  void                 btt_set_onset_tracking_callback  (BTT* self, btt_onset_callback_t callback, void* callback_self);
+DLL_EXPORT  btt_onset_callback_t btt_get_onset_tracking_callback  (BTT* self, void** returned_callback_self);
+DLL_EXPORT  void                 btt_set_beat_tracking_callback   (BTT* self, btt_beat_callback_t callback, void* callback_self);
+DLL_EXPORT  btt_beat_callback_t  btt_get_beat_tracking_callback   (BTT* self, void** returned_callback_self);
 
 #if defined(__cplusplus)
 }

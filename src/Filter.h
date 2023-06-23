@@ -4,6 +4,8 @@
 extern "C"{
 #endif  //__cplusplus 
 
+#include "DLL.h"
+
 typedef struct opaque_filter_struct Filter;
 
 typedef enum filter_type_enum
@@ -28,19 +30,19 @@ typedef enum filter_window_enum
 Filter*         filter_new            (filter_type_t type, float cutoff, int order);
 Filter*         filter_destroy        (Filter* self);
 
-void            filter_clear          (Filter* self);
-void            filter_set_filter_type(Filter* self, filter_type_t type);
-filter_type_t   filter_get_filter_type(Filter* self);
-void            filter_set_sample_rate(Filter* self, float sample_rate);
-float           filter_get_sample_rate(Filter* self);
-void            filter_set_cutoff     (Filter* self, float cutoff);
-float           filter_get_cutoff     (Filter* self);
-void            filter_set_order      (Filter* self, int order); //cannot be greater than the initial order...
-int             filter_get_order      (Filter* self);
-void            filter_set_window_type(Filter* self, filter_window_t window);
-filter_window_t filter_get_window_type(Filter* self);
-
-void            filter_process_data   (Filter* self, float* data, int num_samples);
+DLL_EXPORT  void            filter_clear          (Filter* self);
+DLL_EXPORT  void            filter_set_filter_type(Filter* self, filter_type_t type);
+DLL_EXPORT  filter_type_t   filter_get_filter_type(Filter* self);
+DLL_EXPORT  void            filter_set_sample_rate(Filter* self, float sample_rate);
+DLL_EXPORT  float           filter_get_sample_rate(Filter* self);
+DLL_EXPORT  void            filter_set_cutoff     (Filter* self, float cutoff);
+DLL_EXPORT  float           filter_get_cutoff     (Filter* self);
+DLL_EXPORT  void            filter_set_order      (Filter* self, int order); //cannot be greater than the initial order...
+DLL_EXPORT  int             filter_get_order      (Filter* self);
+DLL_EXPORT  void            filter_set_window_type(Filter* self, filter_window_t window);
+DLL_EXPORT  filter_window_t filter_get_window_type(Filter* self);
+  
+DLL_EXPORT  void            filter_process_data   (Filter* self, float* data, int num_samples);
 
 #ifdef __cplusplus 
 }

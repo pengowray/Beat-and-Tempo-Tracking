@@ -1,4 +1,5 @@
 #include "STFT.h"
+#include "DLL.h"
 
 #include <stdlib.h> //calloc
 
@@ -21,6 +22,7 @@ struct Opaque_STFT_Struct
 };
 
 /*--------------------------------------------------------------------*/
+DLL_EXPORT
 STFT* stft_new(int window_size /*power of 2 please*/, int overlap /* 1, 2, 4, 8 */, int should_resynthesize)
 {
   STFT* self = calloc(1, sizeof(*self));
