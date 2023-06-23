@@ -5,7 +5,7 @@ set PATH=%PATH%;C:\msys64\mingw64\bin
 set PATH=%PATH%;C:\msys64
 
 mkdir btt-cs
-swig.exe -csharp -outdir btt-cs BTT.i 
+swig.exe -csharp -namespace BTTLib -outdir btt-cs BTT.i 
 
 rem gcc -lm -lpthread -lrt
 
