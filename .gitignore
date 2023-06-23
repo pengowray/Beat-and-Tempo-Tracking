@@ -1,10 +1,10 @@
-demos/offline/audio
 build/
 a.out
 .DS_Store
 
 # project specific
-bttswig/
+demos/offline/audio
+btt-cs/
 BTT_wrap.c
 
 ## https://github.com/github/gitignore/blob/main/C.gitignore
